@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="funtils API docs, for the Dart programming language.">
+  <title>funtils - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">funtils package</li>
+  </ol>
+  <div class="self-name">funtils</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <!-- 
+This README describes the package. If you publish this package to pub.dev,
+this README's contents appear on the landing page for your package.
+
+For information about how to write a good package README, see the guide for
+[writing package pages](https://dart.dev/tools/pub/writing-package-pages). 
+
+For general information about developing packages, see the Dart guide for
+[creating packages](https://dart.dev/guides/libraries/create-packages)
+and the Flutter guide for
+[developing packages and plugins](https://flutter.dev/to/develop-packages). 
+-->
+<p>funtils is a useful little dart library, that adds some nice little utilities for functional programming in dart. This library is specifically designed for dart 3+ and currently contains a Result and a Option type.</p>
+<h2 id="features">Features</h2>
+<p>This Library contains a Result and a Option type. These are extremely useful for writing safe code in dart, as they offer several advantages over regular nulls and exceptions. Some of the advantages are a more explicit function signature and more robust code, since you wont be surprised by unexpected exceptions because the compiler forces you to deal with both cases before accessing the value.</p>
+<p>These Types also contain some nice basic methods, like map, bind, unwrapOr, expect, etc. to make your life a lot easier and to avoid unnecessary nesting of switch expressions.</p>
+<p>This Library is also specifically designed for dart 3+ and the Types are designed to work with darts switch expressions!</p>
+<h2 id="getting-started">Getting started</h2>
+<p>Adding this library is pretty straight forward! Just add the following dependency to your <code>pubspec.yaml</code>:</p>
+<pre class="language-yaml"><code class="language-yaml">dependencies:
+  funtils: ^1.0.0
+</code></pre>
+<p>and then just run one of the following commands:</p>
+<pre class="language-sh"><code class="language-sh"># If you just use dart:
+$ dart pub get
+
+# Or if using flutter:
+$ flutter pub get
+</code></pre>
+<p>And with this you are ready to go!</p>
+<h2 id="usage">Usage</h2>
+<p>Here is a List of the current things that are implemented by the funtils library:</p>
+<h3 id="basic-type-constructs">Basic type constructs</h3>
+<h4 id="option">Option</h4>
+<p><code>Option</code> is a simple Algebraic Data Type that is used to represent the possibility of a missing value. It consists of 2 possible states: <code>Some(value)</code> and <code>None()</code>.</p>
+<p>Here is a simplified implementation of this type:</p>
+<pre class="language-dart"><code class="language-dart">sealed class Option&lt;T&gt; {}
+
+final class Some&lt;T&gt; extends Option&lt;T&gt; {
+  final T value;
+  Some(this.value);
+}
+
+final class None&lt;T&gt; extends Option&lt;T&gt; {}
+</code></pre>
+<p>And here is a simple example of how to use this type:</p>
+<pre class="language-dart"><code class="language-dart">Option&lt;double&gt; safeDiv(int n1, int n2) =&gt; n2 == 0 ? None() : Some(n1 / n2);
+
+void main() {
+  double result = switch (safeDiv(16, 4)) {
+    Some(:final value) =&gt; value,
+    None() =&gt; 0,
+  };
+
+  print(result);
+}
+</code></pre>
+<h4 id="result">Result</h4>
+<p><code>Result</code> is the other big ADT. It is used to model computations, that might fail in a declarative manner. It also has, like <code>Option</code> 2 possible states: <code>Ok(okValue)</code> and <code>Error(errorValue)</code>.</p>
+<p>Here is a simplified implementation of the Result type:</p>
+<pre class="language-dart"><code class="language-dart">sealed class Result&lt;T, E&gt; {}
+
+final class Ok&lt;T, E&gt; extends Result&lt;T, E&gt; {
+    final T ok;
+    Ok(this.ok);
+}
+
+final class Error&lt;T, E&gt; extends Result&lt;T, E&gt; {
+    final E error;
+    Error(this.error);
+}
+</code></pre>
+<p>And here is the same division example, just with a Result instead of a Option:</p>
+<pre class="language-dart"><code class="language-dart">Result&lt;double, String&gt; safeDiv(int n1, int n2) =&gt;
+    n2 == 0 ? Error("Can't divide by zero!") : Ok(n1 / n2);
+
+void main() {
+  print(switch (safeDiv(16, 4)) {
+    Ok(:final ok) =&gt; ok,
+    Error(:final error) =&gt; error,
+  });
+}
+</code></pre>
+<h3 id="constructors">Constructors</h3>
+<p>Both Option and Result have two factory constructors, to convert a nullable value or a function that might throw to a Option/Result:</p>
+<pre class="language-dart"><code class="language-dart">factory Option.fromNullable(T? nullable);
+factory Option.fromThrowable(T Function() throwable);
+</code></pre>
+<p>The Result variants look almost identical, with the small difference, that they take a second argument for the Error value:</p>
+<pre class="language-dart"><code class="language-dart">factory Result.fromNullable(T? nullable, E error);
+factory Result.fromThrowable(T Function() throwable, E error);
+</code></pre>
+<h3 id="operations">Operations</h3>
+<p>Both Option and Result are Monads. This basically just means, that they have, next to their types also methods like <code>.flatMap()</code>, that allow us to alter their inner values and chain operations, without deeply nested switch expressions. This is very handy for more complex operations, as your code will turn into a simple data transformation pipeline.</p>
+<p>Below are all of the methods of each of the types and a short explanation of what they do.</p>
+<h4 id="option-2">Option</h4>
+<ul>
+<li><code>Option&lt;N&gt; map&lt;N&gt;(N Function(T) fn);</code> Used to transform the value inside the Some of a Option.</li>
+<li><code>Option&lt;N&gt; flapMap&lt;N&gt;(Option&lt;N&gt; Function(T) fn);</code> Used to combine two Options into one.</li>
+<li><code>T unwrap();</code> Used to unwrap the value of a Option. Will throw if the Option is None!</li>
+<li><code>T unwrapOr(T fallback);</code> Used to unwrap the value of a Option. Will return the fallback if the Option is a None!</li>
+<li><code>Option&lt;T&gt; where(bool Function(T) fn);</code> Turns a Some into a None if the predicate doesn't match.</li>
+</ul>
+<h4 id="result-2">Result</h4>
+<ul>
+<li><code>Result&lt;N, E&gt; map&lt;N&gt;(N Function(T) fn);</code> Used to transform the value inside the Ok of a Result.</li>
+<li><code>Result&lt;T, N&gt; mapError&lt;N&gt;(N Function(E) fn);</code> Used to transform the value inside the Error of a Result.</li>
+<li><code>Result&lt;N, E&gt; flatMap&lt;N&gt;(Result&lt;N, E&gt; Function(T) fn);</code> Used to combine two Results into one. Doesn't do anything if the Result is an Error!</li>
+<li><code>Result&lt;T, N&gt; flatMapError&lt;N&gt;(Result&lt;T, N&gt; Function(E) fn);</code> Used to combine two Results into one. Doesn't do anything if the Result is an Ok!</li>
+<li><code>T unwrap();</code> Used to unwrap the value of a Result. Will throw if the Result is an Error!</li>
+<li><code>E unwrapError();</code> Used to unwrap the value of a Result. Will throw if the Result is Ok!</li>
+<li><code>T unwrapOr(T fallback);</code> Used to unwrap the value of a Result. Will return the fallback if the Result is an Error!</li>
+<li><code>E unwrapErrorOr(E fallback);</code> Used to unwrap the value of a Result. Will return the fallback if the Result is Ok!</li>
+</ul>
+<!--
+## Additional information
+
+TODO: Tell users more about the package: where to find more information, how to 
+contribute to the package, how to file issues, what response they can expect 
+from the package authors, and more.
+-->
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="funtils">
+  <span class="name"><a href="funtils/">funtils</a></span> 
+
+</dt>
+<dd>A library implementing basic functional Types and utils.
+Currently only Option and Result are implemented.
+</dd>
+
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">funtils package</li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">funtils</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="funtils/">funtils</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    funtils
+      1.0.0
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
