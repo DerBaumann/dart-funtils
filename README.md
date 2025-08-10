@@ -11,6 +11,8 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/to/develop-packages). 
 -->
 
+# Dart-Funutils
+
 funtils is a useful little dart library, that adds some nice little utilities for functional programming in dart. This library is specifically designed for dart 3+ and currently contains a Result and a Option type.
 
 ## Features
