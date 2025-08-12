@@ -50,10 +50,12 @@ extension OptionExt<T> on Option<T> {
 
 final class Some<T> extends Option<T> {
   final T value;
-  Some(this.value);
+  const Some(this.value);
 
   @override
   List<Object?> get props => [value];
 }
 
-final class None<Nil> extends Option<Nil> {}
+final class None<Nil> extends Option<Nil> {
+  const None();
+}

@@ -69,7 +69,7 @@ extension ResultExt<T, E> on Result<T, E> {
 
 final class Ok<T, Nil> extends Result<T, Nil> {
   final T ok;
-  Ok(this.ok);
+  const Ok(this.ok);
 
   @override
   List<Object?> get props => [ok];
@@ -77,7 +77,7 @@ final class Ok<T, Nil> extends Result<T, Nil> {
 
 final class Error<Nil, E> extends Result<Nil, E> {
   final E error;
-  Error(this.error);
+  const Error(this.error);
 
   @override
   List<Object?> get props => [error];
