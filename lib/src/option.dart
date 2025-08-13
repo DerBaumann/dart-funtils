@@ -48,6 +48,23 @@ extension OptionExt<T> on Option<T> {
   };
 }
 
+extension FutureOptionExt<T> on Future<Option<T>> {
+  Future<Option<N>> map<N>(N Function(T) fn) async => then(
+    (value) => switch (value) {
+      Some(:final value) => Some(fn(value)),
+      None() => None(),
+    },
+  );
+
+  // >>=
+  Future<Option<N>> flatMap<N>(Future<Option<N>> Function(T) fn) => then(
+    (value) => switch (value) {
+      Some(:final value) => fn(value),
+      None() => None(),
+    },
+  );
+}
+
 final class Some<T> extends Option<T> {
   final T value;
   const Some(this.value);

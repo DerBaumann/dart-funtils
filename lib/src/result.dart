@@ -67,6 +67,38 @@ extension ResultExt<T, E> on Result<T, E> {
   };
 }
 
+extension FutureResultExt<T, E> on Future<Result<T, E>> {
+  Future<Result<N, E>> map<N>(N Function(T) fn) => then(
+    (value) => switch (value) {
+      Ok(:final ok) => Ok(fn(ok)),
+      Error(:final error) => Error(error),
+    },
+  );
+
+  Future<Result<T, N>> mapError<N>(N Function(E) fn) => then(
+    (value) => switch (value) {
+      Ok(:final ok) => Ok(ok),
+      Error(:final error) => Error(fn(error)),
+    },
+  );
+
+  // >>=
+  Future<Result<N, E>> flatMap<N>(Future<Result<N, E>> Function(T) fn) => then(
+    (value) => switch (value) {
+      Ok(:final ok) => fn(ok),
+      Error(:final error) => Error(error),
+    },
+  );
+
+  Future<Result<T, N>> flatMapError<N>(Future<Result<T, N>> Function(E) fn) =>
+      then(
+        (value) => switch (value) {
+          Ok(:final ok) => Ok(ok),
+          Error(:final error) => fn(error),
+        },
+      );
+}
+
 final class Ok<T, Nil> extends Result<T, Nil> {
   final T ok;
   const Ok(this.ok);
